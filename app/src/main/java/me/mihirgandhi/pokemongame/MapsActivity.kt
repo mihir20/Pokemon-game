@@ -1,5 +1,6 @@
 package me.mihirgandhi.pokemongame
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
@@ -25,8 +26,9 @@ import kotlin.concurrent.thread
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private var mMap: GoogleMap? = null
-    val LOACTION_PERMISSION_REQUESTCODE = 123
+    private val LOACTION_PERMISSION_REQUESTCODE = 123
     var myLocation: Location? = null
+    private var pokemonsList = ArrayList<Pokemon>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +38,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+
         checkPermission()
+        loadPokemon()
     }
 
     /**
@@ -81,6 +86,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    @SuppressLint("MissingPermission")
     fun getMyPosition() {
 
         Toast.makeText(this,"User location access on",Toast.LENGTH_LONG).show()
@@ -162,6 +168,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mario)))
                         mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(playerLocation, 14f))
 
+                        for (pokemon in pokemonsList){
+                            val playerLocation = LatLng(pokemon.location!!.latitude, pokemon.location!!.longitude)
+                            mMap!!.addMarker(MarkerOptions()
+                                    .position(playerLocation)
+                                    .title(pokemon.name)
+                                    .snippet(pokemon.description)
+                                    .icon(BitmapDescriptorFactory.fromResource(pokemon.iconId!!)))
+                        }
                     }
                     Thread.sleep(1000)
                 }catch (ex:Exception){
@@ -171,5 +185,17 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
         }
+    }
+
+    fun loadPokemon(){
+
+
+        pokemonsList.add(Pokemon("Bulbasaure", "Grass type pokemon",
+                23.85140, 73.7144668 , R.drawable.bulbasaur))
+        pokemonsList.add(Pokemon("Squirtle", "water type pokemon",
+                23.847537356334065, 73.71560407585253,R.drawable.squirtle))
+        pokemonsList.add(Pokemon("Charmander", "Fire type pokemon",
+                23.83145, 73.71296548, R.drawable.charmander))
+
     }
 }
