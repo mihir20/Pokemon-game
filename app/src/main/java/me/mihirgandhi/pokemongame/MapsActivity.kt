@@ -29,6 +29,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val LOACTION_PERMISSION_REQUESTCODE = 123
     var myLocation: Location? = null
     private var pokemonsList = ArrayList<Pokemon>()
+    var oldLocation:Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -134,15 +135,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            return
         }
 
         override fun onProviderEnabled(p0: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+             return
         }
 
         override fun onProviderDisabled(p0: String?) {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            return
         }
     }
 
@@ -157,6 +158,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             while (true){
                 try {
 
+                    if (oldLocation == null || oldLocation!!.distanceTo(myLocation)>2){
                     runOnUiThread {
                         mMap!!.clear()
                         // Add a marker on player and move the camera
@@ -166,7 +168,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                 .title("You")
                                 .snippet("This is your locatiom")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.mario)))
-                        mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(playerLocation, 14f))
+                        mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(playerLocation, 16f))
 
                         for (pokemon in pokemonsList){
 
@@ -178,13 +180,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                                     .snippet(pokemon.description)
                                     .icon(BitmapDescriptorFactory.fromResource(pokemon.iconId!!)))
                             }
-                            if (myLocation!!.distanceTo(pokemon.location)<=10){
+                            if (myLocation!!.distanceTo(pokemon.location)<=7){
                                 pokemon.catched = true
                                 Log.e("SEE", pokemonsList.toString())
                             }
                         }
                     }
-                    Thread.sleep(1000)
+
+                        oldLocation = myLocation
+                    Thread.sleep(1000)}
                 }catch (ex:Exception){
 
                 }
@@ -202,7 +206,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         pokemonsList.add(Pokemon("Squirtle", "water type pokemon",
                 23.847537356334065, 73.71560407585253,R.drawable.squirtle))
         pokemonsList.add(Pokemon("Charmander", "Fire type pokemon",
-                23.848774838835478, 73.7115054141957, R.drawable.charmander))
+                23.83145, 73.71296548, R.drawable.charmander))
 
     }
 }
