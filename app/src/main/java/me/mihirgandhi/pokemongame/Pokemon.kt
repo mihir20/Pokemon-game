@@ -11,6 +11,7 @@ class Pokemon {
     var name:String? = null
     var description:String? = null
     var iconId:Int? = null
+    var catched:Boolean? = false
 
     constructor(
             name:String,

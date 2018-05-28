@@ -169,12 +169,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                         mMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(playerLocation, 14f))
 
                         for (pokemon in pokemonsList){
+
+                            if (pokemon.catched == false){
                             val playerLocation = LatLng(pokemon.location!!.latitude, pokemon.location!!.longitude)
                             mMap!!.addMarker(MarkerOptions()
                                     .position(playerLocation)
                                     .title(pokemon.name)
                                     .snippet(pokemon.description)
                                     .icon(BitmapDescriptorFactory.fromResource(pokemon.iconId!!)))
+                            }
+                            if (myLocation!!.distanceTo(pokemon.location)<=10){
+                                pokemon.catched = true
+                                Log.e("SEE", pokemonsList.toString())
+                            }
                         }
                     }
                     Thread.sleep(1000)
@@ -195,7 +202,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         pokemonsList.add(Pokemon("Squirtle", "water type pokemon",
                 23.847537356334065, 73.71560407585253,R.drawable.squirtle))
         pokemonsList.add(Pokemon("Charmander", "Fire type pokemon",
-                23.83145, 73.71296548, R.drawable.charmander))
+                23.848774838835478, 73.7115054141957, R.drawable.charmander))
 
     }
 }
